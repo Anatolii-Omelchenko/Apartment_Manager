@@ -89,14 +89,13 @@ public class Apartment {
 
         DecimalFormat decimalFormat = new DecimalFormat( "#.##" );
 
-        return "Apartment{" +
-                "id=" + id +
-                ", district='" + district + '\'' +
-                ", address='" + address + '\'' +
-                ", area=" + decimalFormat.format(area) +
-                ", rooms=" + rooms +
-                ", price=" + price +
-                '}';
+        return "Apartment: " +
+                "id = " + id +
+                " | district: " + district +
+                " | address: " + address +
+                " | area: " + decimalFormat.format(area) + " m2" +
+                " | rooms: " + rooms +
+                " | price: " + price + " $.";
     }
 
     @Override

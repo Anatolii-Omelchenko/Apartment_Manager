@@ -55,7 +55,7 @@ public class ApartmentManagerMain {
 
     }
 
-    public static void addApartment(Scanner scanner) {
+    private static void addApartment(Scanner scanner) {
         System.out.println("Input district:");
         String district = scanner.nextLine();
 
@@ -97,7 +97,7 @@ public class ApartmentManagerMain {
 
     }
 
-    public static void deleteApartmentById(Scanner scanner) {
+    private static void deleteApartmentById(Scanner scanner) {
         System.out.println("Input apartment id: ");
         long id = Long.parseLong(scanner.nextLine());
 
@@ -118,7 +118,7 @@ public class ApartmentManagerMain {
 
     }
 
-    public static void changePriceById(Scanner scanner) {
+    private static void changePriceById(Scanner scanner) {
         System.out.println("Input id:");
         long id = Long.parseLong(scanner.nextLine());
 
@@ -143,7 +143,7 @@ public class ApartmentManagerMain {
 
     }
 
-    public static void viewAllApartments() {
+    private static void viewAllApartments() {
 
         Query query = em.createQuery("SELECT x FROM Apartment x", Apartment.class);
         List<Apartment> apartments = query.getResultList();
@@ -154,7 +154,7 @@ public class ApartmentManagerMain {
 
     }
 
-    public static void addRandomApartments(Scanner scanner) {
+    private static void addRandomApartments(Scanner scanner) {
         System.out.println("Input apartments count:");
         int count = Integer.parseInt(scanner.nextLine());
 
@@ -181,7 +181,9 @@ public class ApartmentManagerMain {
         final String[] districts = {"Shevchenko district", "Southern district", "Kyiv district"};
         final String[] streets = {"Shevchenko", "Green", "Private", "European", "Hohol", "Central"};
 
-        result.setAddress(streets[random.nextInt(streets.length)]);
+        String address = streets[random.nextInt(streets.length)] + ", " + random.nextInt(198);
+
+        result.setAddress(address);
         result.setDistrict(districts[random.nextInt(districts.length)]);
         result.setRooms(random.nextInt(1, 6));
         result.setArea(random.nextFloat(30, 120));
