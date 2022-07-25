@@ -1,6 +1,7 @@
 package prog.academy;
 
 import javax.persistence.*;
+import java.text.DecimalFormat;
 import java.util.Objects;
 
 @Entity
@@ -85,11 +86,14 @@ public class Apartment {
 
     @Override
     public String toString() {
+
+        DecimalFormat decimalFormat = new DecimalFormat( "#.##" );
+
         return "Apartment{" +
                 "id=" + id +
                 ", district='" + district + '\'' +
                 ", address='" + address + '\'' +
-                ", area=" + area +
+                ", area=" + decimalFormat.format(area) +
                 ", rooms=" + rooms +
                 ", price=" + price +
                 '}';

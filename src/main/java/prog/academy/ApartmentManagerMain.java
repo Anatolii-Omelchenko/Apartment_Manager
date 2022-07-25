@@ -12,9 +12,7 @@ public class ApartmentManagerMain {
     static EntityManagerFactory emf;
 
     public static void main(String[] args) {
-
         Scanner scanner = new Scanner(System.in);
-
         try {
             emf = Persistence.createEntityManagerFactory("Apartment_DB");
             em = emf.createEntityManager();
@@ -31,38 +29,28 @@ public class ApartmentManagerMain {
                     String choose = scanner.nextLine();
 
                     if (choose.equals("1")) {
-
                         addApartment(scanner);
-
                     } else if (choose.equals("2")) {
-
                         addRandomApartments(scanner);
-
                     } else if (choose.equals("3")) {
-
                         deleteApartmentById(scanner);
-
                     } else if (choose.equals("4")) {
-
                         changePriceById(scanner);
-
                     } else if (choose.equals("5")) {
-
-                        viewAllApartments(scanner);
-
+                        viewAllApartments();
                     } else {
                         return;
                     }
                 }
-
-
-            } catch (Exception e) {
-                e.printStackTrace();
+            } finally {
+                scanner.close();
+                em.close();
+                emf.close();
             }
-        } finally {
-            em.close();
-            emf.close();
-            scanner.close();
+
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            return;
         }
 
     }
@@ -74,14 +62,26 @@ public class ApartmentManagerMain {
         System.out.println("Input address:");
         String address = scanner.nextLine();
 
-        System.out.println("Input area:");
-        float area = scanner.nextFloat();
+        float area = 0;
+        int rooms = 0;
+        int price = 0;
 
-        System.out.println("Input count of rooms:");
-        int rooms = scanner.nextInt();
+        while (true) {
+            try {
+                System.out.println("Input area:");
+                area = Float.parseFloat(scanner.nextLine());
 
-        System.out.println("Input price:");
-        int price = scanner.nextInt();
+                System.out.println("Input count of rooms:");
+                rooms = Integer.parseInt(scanner.nextLine());
+
+                System.out.println("Input price:");
+                price = Integer.parseInt(scanner.nextLine());
+                break;
+            } catch (NumberFormatException ex) {
+                System.out.println("Wrong input format!");
+                continue;
+            }
+        }
 
         Apartment apartment = new Apartment(district, address, area, rooms, price);
 
@@ -99,11 +99,11 @@ public class ApartmentManagerMain {
 
     public static void deleteApartmentById(Scanner scanner) {
         System.out.println("Input apartment id: ");
-        long id = scanner.nextLong();
+        long id = Long.parseLong(scanner.nextLine());
 
-        Apartment apartment = em.getReference(Apartment.class, id);
+        Apartment apartment = em.find(Apartment.class, id);
         if (apartment == null) {
-            System.out.println("Apartment was not found!");
+            System.out.println("Apartment with id " + id + " was not found!");
             return;
         }
 
@@ -120,16 +120,16 @@ public class ApartmentManagerMain {
 
     public static void changePriceById(Scanner scanner) {
         System.out.println("Input id:");
-        long id = scanner.nextLong();
+        long id = Long.parseLong(scanner.nextLine());
 
-        Apartment apartment = em.getReference(Apartment.class, id);
+        Apartment apartment = em.find(Apartment.class, id);
         if (apartment == null) {
-            System.out.println("Apartment was not found!");
+            System.out.println("Apartment with id " + id + " was not found!");
             return;
         }
 
         System.out.println("Input new price:");
-        int newPrice = scanner.nextInt();
+        int newPrice = Integer.parseInt(scanner.nextLine());
 
         EntityTransaction transaction = em.getTransaction();
         transaction.begin();
@@ -137,12 +137,13 @@ public class ApartmentManagerMain {
             apartment.setPrice(newPrice);
             transaction.commit();
         } catch (Exception ex) {
+            ex.printStackTrace();
             transaction.rollback();
         }
 
     }
 
-    public static void viewAllApartments(Scanner scanner) {
+    public static void viewAllApartments() {
 
         Query query = em.createQuery("SELECT x FROM Apartment x", Apartment.class);
         List<Apartment> apartments = query.getResultList();
@@ -155,7 +156,7 @@ public class ApartmentManagerMain {
 
     public static void addRandomApartments(Scanner scanner) {
         System.out.println("Input apartments count:");
-        int count = scanner.nextInt();
+        int count = Integer.parseInt(scanner.nextLine());
 
         EntityTransaction transaction = em.getTransaction();
 
