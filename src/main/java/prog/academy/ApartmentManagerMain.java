@@ -25,6 +25,8 @@ public class ApartmentManagerMain {
                     System.out.println("4: change apartment price");
                     System.out.println("5: view all apartments");
                     System.out.println("6: select apartments by count of rooms");
+                    System.out.println("7: select apartments by price");
+
                     System.out.print("-> ");
 
                     String choose = scanner.nextLine();
@@ -41,6 +43,8 @@ public class ApartmentManagerMain {
                         viewAllApartments();
                     } else if (choose.equals("6")) {
                         viewApartmentsByCountOfRooms(scanner);
+                    } else if (choose.equals("7")) {
+                        viewApartmentsCheaperThan(scanner);
                     } else {
                         return;
                     }
@@ -180,7 +184,7 @@ public class ApartmentManagerMain {
         Apartment result = new Apartment();
 
         final Random random = new Random();
-        final int priceM2 = 9000;
+        final int priceM2 = 1100;
         final String[] districts = {"Shevchenko district", "Southern district", "Kyiv district"};
         final String[] streets = {"Shevchenko", "Green", "Private", "European", "Hohol", "Central"};
 
@@ -214,5 +218,24 @@ public class ApartmentManagerMain {
             System.out.println(apartment);
         }
 
+    }
+
+    private static void viewApartmentsCheaperThan(Scanner scanner) {
+        System.out.println("Input maximal price:");
+        int price = Integer.parseInt(scanner.nextLine());
+
+        Query query = em.createQuery("SELECT x FROM Apartment x WHERE x.price <= :price", Apartment.class);
+        query.setParameter("price", price);
+
+        List<Apartment> apartments = query.getResultList();
+
+        if (apartments.size() == 0) {
+            System.out.println();
+            System.out.println("Apartments cheaper than " + price + "$ was not found! Try again!\n");
+        }
+
+        for (Apartment apartment : apartments) {
+            System.out.println(apartment);
+        }
     }
 }
