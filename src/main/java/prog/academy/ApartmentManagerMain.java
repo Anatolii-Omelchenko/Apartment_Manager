@@ -24,6 +24,7 @@ public class ApartmentManagerMain {
                     System.out.println("3: delete apartment");
                     System.out.println("4: change apartment price");
                     System.out.println("5: view all apartments");
+                    System.out.println("6: select apartments by count of rooms");
                     System.out.print("-> ");
 
                     String choose = scanner.nextLine();
@@ -38,6 +39,8 @@ public class ApartmentManagerMain {
                         changePriceById(scanner);
                     } else if (choose.equals("5")) {
                         viewAllApartments();
+                    } else if (choose.equals("6")) {
+                        viewApartmentsByCountOfRooms(scanner);
                     } else {
                         return;
                     }
@@ -190,6 +193,26 @@ public class ApartmentManagerMain {
         result.setPrice((int) (result.getArea() * priceM2));
 
         return result;
+
+    }
+
+    private static void viewApartmentsByCountOfRooms(Scanner scanner) {
+
+        System.out.println("Input How rooms do you need: ");
+        int rooms = Integer.parseInt(scanner.nextLine());
+
+        Query query = em.createQuery("SELECT x FROM Apartment x WHERE x.rooms = :rooms", Apartment.class);
+        query.setParameter("rooms", rooms);
+        List<Apartment> apartments = query.getResultList();
+
+        if (apartments.size() == 0) {
+            System.out.println();
+            System.out.println(rooms + "-rooms apartments was not found! Try again!\n");
+        }
+
+        for (Apartment apartment : apartments) {
+            System.out.println(apartment);
+        }
 
     }
 }
