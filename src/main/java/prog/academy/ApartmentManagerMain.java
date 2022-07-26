@@ -26,6 +26,7 @@ public class ApartmentManagerMain {
                     System.out.println("5: view all apartments");
                     System.out.println("6: select apartments by count of rooms");
                     System.out.println("7: select apartments by price");
+                    System.out.println("8: select apartments by area");
 
                     System.out.print("-> ");
 
@@ -45,6 +46,8 @@ public class ApartmentManagerMain {
                         viewApartmentsByCountOfRooms(scanner);
                     } else if (choose.equals("7")) {
                         viewApartmentsCheaperThan(scanner);
+                    } else if (choose.equals("8")) {
+                        viewApartmentsByArea(scanner);
                     } else {
                         return;
                     }
@@ -232,6 +235,25 @@ public class ApartmentManagerMain {
         if (apartments.size() == 0) {
             System.out.println();
             System.out.println("Apartments cheaper than " + price + "$ was not found! Try again!\n");
+        }
+
+        for (Apartment apartment : apartments) {
+            System.out.println(apartment);
+        }
+    }
+
+    private static void viewApartmentsByArea(Scanner scanner) {
+        System.out.println("Input minimal size of apartment:");
+        float area = Float.parseFloat(scanner.nextLine());
+
+        Query query = em.createQuery("SELECT x FROM Apartment x WHERE x.area >= :area", Apartment.class);
+        query.setParameter("area", area);
+
+        List<Apartment> apartments = query.getResultList();
+
+        if (apartments.size() == 0) {
+            System.out.println();
+            System.out.println("Apartments with are more than " + area + "m2 was not found! Try again!\n");
         }
 
         for (Apartment apartment : apartments) {
